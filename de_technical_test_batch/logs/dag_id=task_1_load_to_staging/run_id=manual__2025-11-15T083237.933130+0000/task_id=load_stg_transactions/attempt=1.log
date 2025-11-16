@@ -1,0 +1,30 @@
+[2025-11-15T08:33:30.641+0000] {local_task_job_runner.py:120} INFO - ::group::Pre task execution logs
+[2025-11-15T08:33:30.912+0000] {taskinstance.py:2076} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: task_1_load_to_staging.load_stg_transactions manual__2025-11-15T08:32:37.933130+00:00 [queued]>
+[2025-11-15T08:33:31.008+0000] {taskinstance.py:2076} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: task_1_load_to_staging.load_stg_transactions manual__2025-11-15T08:32:37.933130+00:00 [queued]>
+[2025-11-15T08:33:31.017+0000] {taskinstance.py:2306} INFO - Starting attempt 1 of 1
+[2025-11-15T08:33:31.196+0000] {taskinstance.py:2330} INFO - Executing <Task(_PythonDecoratedOperator): load_stg_transactions> on 2025-11-15 08:32:37.933130+00:00
+[2025-11-15T08:33:31.345+0000] {warnings.py:112} WARNING - /home/***/.local/lib/python3.12/site-packages/***/task/task_runner/standard_task_runner.py:61: DeprecationWarning: This process (pid=179) is multi-threaded, use of fork() may lead to deadlocks in the child.
+  pid = os.fork()
+
+[2025-11-15T08:33:31.366+0000] {standard_task_runner.py:63} INFO - Started process 204 to run task
+[2025-11-15T08:33:31.389+0000] {standard_task_runner.py:90} INFO - Running: ['***', 'tasks', 'run', 'task_1_load_to_staging', 'load_stg_transactions', 'manual__2025-11-15T08:32:37.933130+00:00', '--job-id', '4', '--raw', '--subdir', 'DAGS_FOLDER/load_staging_data.py', '--cfg-path', '/tmp/tmpx8oi6eea']
+[2025-11-15T08:33:31.428+0000] {standard_task_runner.py:91} INFO - Job 4: Subtask load_stg_transactions
+[2025-11-15T08:33:31.566+0000] {warnings.py:112} WARNING - /home/***/.local/lib/python3.12/site-packages/***/settings.py:195: DeprecationWarning: The sql_alchemy_conn option in [core] has been moved to the sql_alchemy_conn option in [database] - the old setting has been used, but please update your config.
+  SQL_ALCHEMY_CONN = conf.get("database", "SQL_ALCHEMY_CONN")
+
+[2025-11-15T08:33:31.743+0000] {task_command.py:426} INFO - Running <TaskInstance: task_1_load_to_staging.load_stg_transactions manual__2025-11-15T08:32:37.933130+00:00 [running]> on host 4ccae8bf5725
+[2025-11-15T08:33:32.395+0000] {taskinstance.py:2648} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='***' AIRFLOW_CTX_DAG_ID='task_1_load_to_staging' AIRFLOW_CTX_TASK_ID='load_stg_transactions' AIRFLOW_CTX_EXECUTION_DATE='2025-11-15T08:32:37.933130+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='manual__2025-11-15T08:32:37.933130+00:00'
+[2025-11-15T08:33:32.413+0000] {taskinstance.py:430} INFO - ::endgroup::
+[2025-11-15T08:33:32.529+0000] {base.py:84} INFO - Using connection ID 'postgres_staging_db' for task execution.
+[2025-11-15T08:33:32.550+0000] {load_staging_data.py:33} INFO - Reading CSV from /opt/***/data/transactions.csv with chunk size 50000...
+[2025-11-15T08:33:33.520+0000] {warnings.py:112} WARNING - /opt/***/dags/load_staging_data.py:49: UserWarning: The argument 'infer_datetime_format' is deprecated and will be removed in a future version. A strict version of it is now the default, see https://pandas.pydata.org/pdeps/0004-consistent-to-datetime-parsing.html. You can safely remove this argument.
+  chunk[col] = pd.to_datetime(
+
+[2025-11-15T08:33:33.687+0000] {load_staging_data.py:76} INFO - Loading chunk (1500 rows) to staging.stg_transactions using 'replace' method...
+[2025-11-15T08:33:35.635+0000] {load_staging_data.py:97} INFO - SUCCESS: Total 1500 rows loaded into staging.stg_transactions.
+[2025-11-15T08:33:35.638+0000] {python.py:237} INFO - Done. Returned value was: None
+[2025-11-15T08:33:35.646+0000] {taskinstance.py:441} INFO - ::group::Post task execution logs
+[2025-11-15T08:33:35.888+0000] {taskinstance.py:1206} INFO - Marking task as SUCCESS. dag_id=task_1_load_to_staging, task_id=load_stg_transactions, run_id=manual__2025-11-15T08:32:37.933130+00:00, execution_date=20251115T083237, start_date=20251115T083330, end_date=20251115T083335
+[2025-11-15T08:33:36.100+0000] {local_task_job_runner.py:240} INFO - Task exited with return code 0
+[2025-11-15T08:33:36.361+0000] {taskinstance.py:3503} INFO - 0 downstream tasks scheduled from follow-on schedule check
+[2025-11-15T08:33:36.378+0000] {local_task_job_runner.py:222} INFO - ::endgroup::

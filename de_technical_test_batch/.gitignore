@@ -1,0 +1,20 @@
+# Environments
+venv/
+.venv/
+*/venv/
+*/.venv/
+.env
+*/.env
+
+# Python & System Cache
+__pycache__/
+*/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/

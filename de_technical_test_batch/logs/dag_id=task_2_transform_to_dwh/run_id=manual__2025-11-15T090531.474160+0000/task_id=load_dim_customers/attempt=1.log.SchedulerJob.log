@@ -1,0 +1,1 @@
+[2025-11-15T09:05:35.269+0000] {scheduler_job_runner.py:769} ERROR - Executor reports task instance <TaskInstance: task_2_transform_to_dwh.load_dim_customers manual__2025-11-15T09:05:31.474160+00:00 [queued]> finished (failed) although the task says it's queued. (Info: None) Was the task killed externally?

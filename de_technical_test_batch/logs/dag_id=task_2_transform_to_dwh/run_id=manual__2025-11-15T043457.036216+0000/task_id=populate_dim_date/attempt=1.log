@@ -1,0 +1,62 @@
+[2025-11-15T04:35:09.920+0000] {local_task_job_runner.py:120} INFO - ::group::Pre task execution logs
+[2025-11-15T04:35:10.564+0000] {taskinstance.py:2076} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: task_2_transform_to_dwh.populate_dim_date manual__2025-11-15T04:34:57.036216+00:00 [queued]>
+[2025-11-15T04:35:10.695+0000] {taskinstance.py:2076} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: task_2_transform_to_dwh.populate_dim_date manual__2025-11-15T04:34:57.036216+00:00 [queued]>
+[2025-11-15T04:35:10.706+0000] {taskinstance.py:2306} INFO - Starting attempt 1 of 1
+[2025-11-15T04:35:10.887+0000] {taskinstance.py:2330} INFO - Executing <Task(_PythonDecoratedOperator): populate_dim_date> on 2025-11-15 04:34:57.036216+00:00
+[2025-11-15T04:35:11.043+0000] {warnings.py:112} WARNING - /home/***/.local/lib/python3.12/site-packages/***/task/task_runner/standard_task_runner.py:61: DeprecationWarning: This process (pid=366) is multi-threaded, use of fork() may lead to deadlocks in the child.
+  pid = os.fork()
+
+[2025-11-15T04:35:11.200+0000] {standard_task_runner.py:63} INFO - Started process 378 to run task
+[2025-11-15T04:35:29.983+0000] {standard_task_runner.py:90} INFO - Running: ['***', 'tasks', 'run', 'task_2_transform_to_dwh', 'populate_dim_date', 'manual__2025-11-15T04:34:57.036216+00:00', '--job-id', '9', '--raw', '--subdir', 'DAGS_FOLDER/transform_to_dwh.py', '--cfg-path', '/tmp/tmp4_ejffh3']
+[2025-11-15T04:35:30.050+0000] {standard_task_runner.py:91} INFO - Job 9: Subtask populate_dim_date
+[2025-11-15T04:35:12.278+0000] {warnings.py:112} WARNING - /home/***/.local/lib/python3.12/site-packages/***/settings.py:195: DeprecationWarning: The sql_alchemy_conn option in [core] has been moved to the sql_alchemy_conn option in [database] - the old setting has been used, but please update your config.
+  SQL_ALCHEMY_CONN = conf.get("database", "SQL_ALCHEMY_CONN")
+
+[2025-11-15T04:35:12.751+0000] {task_command.py:426} INFO - Running <TaskInstance: task_2_transform_to_dwh.populate_dim_date manual__2025-11-15T04:34:57.036216+00:00 [running]> on host b556bcabdf74
+[2025-11-15T04:35:13.506+0000] {taskinstance.py:2648} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='***' AIRFLOW_CTX_DAG_ID='task_2_transform_to_dwh' AIRFLOW_CTX_TASK_ID='populate_dim_date' AIRFLOW_CTX_EXECUTION_DATE='2025-11-15T04:34:57.036216+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='manual__2025-11-15T04:34:57.036216+00:00'
+[2025-11-15T04:35:13.523+0000] {taskinstance.py:430} INFO - ::endgroup::
+[2025-11-15T04:35:14.157+0000] {base.py:84} INFO - Using connection ID 'postgres_staging_db' for task execution.
+[2025-11-15T04:35:14.176+0000] {sql.py:487} INFO - Running statement: 
+        INSERT INTO dwh.dim_date (
+            date_key,
+            full_date,
+            day_of_week,
+            day_name,
+            day_of_month,
+            day_of_year,
+            month_of_year,
+            month_name,
+            quarter_of_year,
+            year_num,
+            is_weekend,
+            is_holiday
+        )
+        SELECT
+            TO_CHAR(d, 'YYYYMMDD')::INT AS date_key,
+            d::DATE AS full_date,
+            EXTRACT(ISODOW FROM d) AS day_of_week,
+            TO_CHAR(d, 'Day') AS day_name,
+            EXTRACT(DAY FROM d) AS day_of_month,
+            EXTRACT(DOY FROM d) AS day_of_year,
+            EXTRACT(MONTH FROM d) AS month_of_year,
+            TO_CHAR(d, 'Month') AS month_name,
+            EXTRACT(QUARTER FROM d) AS quarter_of_year,
+            EXTRACT(YEAR FROM d) AS year_num,
+            EXTRACT(ISODOW FROM d) IN (6, 7) AS is_weekend,
+            FALSE AS is_holiday
+            
+        FROM generate_series(
+            '2020-01-01'::DATE,
+            '2030-12-31'::DATE,
+            '1 day'::INTERVAL
+        ) AS t(d)
+        
+        ON CONFLICT (date_key) DO NOTHING;
+    , parameters: None
+[2025-11-15T04:35:14.549+0000] {sql.py:496} INFO - Rows affected: 4018
+[2025-11-15T04:35:14.599+0000] {transform_to_dwh.py:114} INFO - dim_date is populated/verified for 2020-2030.
+[2025-11-15T04:35:14.614+0000] {python.py:237} INFO - Done. Returned value was: None
+[2025-11-15T04:35:14.618+0000] {taskinstance.py:441} INFO - ::group::Post task execution logs
+[2025-11-15T04:35:14.704+0000] {taskinstance.py:1206} INFO - Marking task as SUCCESS. dag_id=task_2_transform_to_dwh, task_id=populate_dim_date, run_id=manual__2025-11-15T04:34:57.036216+00:00, execution_date=20251115T043457, start_date=20251115T043510, end_date=20251115T043514
+[2025-11-15T04:35:14.821+0000] {local_task_job_runner.py:240} INFO - Task exited with return code 0
+[2025-11-15T04:35:14.905+0000] {local_task_job_runner.py:222} INFO - ::endgroup::

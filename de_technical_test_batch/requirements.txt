@@ -1,0 +1,5 @@
+faker
+pandas
+sqlalchemy
+apache-airflow-providers-postgres
+pendulum

@@ -1,0 +1,61 @@
+[2025-11-15T13:16:09.952+0000] {local_task_job_runner.py:120} INFO - ::group::Pre task execution logs
+[2025-11-15T13:16:10.083+0000] {taskinstance.py:2076} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: task_2_transform_to_dwh.load_fact_sales manual__2025-11-15T13:15:58.665502+00:00 [queued]>
+[2025-11-15T13:16:10.116+0000] {taskinstance.py:2076} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: task_2_transform_to_dwh.load_fact_sales manual__2025-11-15T13:15:58.665502+00:00 [queued]>
+[2025-11-15T13:16:10.118+0000] {taskinstance.py:2306} INFO - Starting attempt 1 of 1
+[2025-11-15T13:16:10.200+0000] {taskinstance.py:2330} INFO - Executing <Task(_PythonDecoratedOperator): load_fact_sales> on 2025-11-15 13:15:58.665502+00:00
+[2025-11-15T13:16:10.234+0000] {standard_task_runner.py:90} INFO - Running: ['***', 'tasks', 'run', 'task_2_transform_to_dwh', 'load_fact_sales', 'manual__2025-11-15T13:15:58.665502+00:00', '--job-id', '17', '--raw', '--subdir', 'DAGS_FOLDER/transform_to_dwh.py', '--cfg-path', '/tmp/tmp0lpfhmqa']
+[2025-11-15T13:16:10.243+0000] {logging_mixin.py:188} WARNING - /home/***/.local/lib/python3.12/site-packages/***/task/task_runner/standard_task_runner.py:61 DeprecationWarning: This process (pid=902) is multi-threaded, use of fork() may lead to deadlocks in the child.
+[2025-11-15T13:16:10.246+0000] {standard_task_runner.py:91} INFO - Job 17: Subtask load_fact_sales
+[2025-11-15T13:16:10.247+0000] {standard_task_runner.py:63} INFO - Started process 903 to run task
+[2025-11-15T13:16:10.305+0000] {logging_mixin.py:188} WARNING - /home/***/.local/lib/python3.12/site-packages/***/settings.py:195 DeprecationWarning: The sql_alchemy_conn option in [core] has been moved to the sql_alchemy_conn option in [database] - the old setting has been used, but please update your config.
+[2025-11-15T13:16:10.460+0000] {task_command.py:426} INFO - Running <TaskInstance: task_2_transform_to_dwh.load_fact_sales manual__2025-11-15T13:15:58.665502+00:00 [running]> on host 704e0add7d75
+[2025-11-15T13:16:10.825+0000] {taskinstance.py:2648} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='***' AIRFLOW_CTX_DAG_ID='task_2_transform_to_dwh' AIRFLOW_CTX_TASK_ID='load_fact_sales' AIRFLOW_CTX_EXECUTION_DATE='2025-11-15T13:15:58.665502+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='manual__2025-11-15T13:15:58.665502+00:00'
+[2025-11-15T13:16:10.829+0000] {taskinstance.py:430} INFO - ::endgroup::
+[2025-11-15T13:16:10.833+0000] {transform_to_dwh.py:157} INFO - Truncating fact_sales for idempotent load...
+[2025-11-15T13:16:10.909+0000] {base.py:84} INFO - Using connection ID 'postgres_staging_db' for task execution.
+[2025-11-15T13:16:10.923+0000] {sql.py:487} INFO - Running statement: TRUNCATE TABLE dwh.fact_sales;, parameters: None
+[2025-11-15T13:16:10.978+0000] {transform_to_dwh.py:159} INFO - Loading new data into fact_sales...
+[2025-11-15T13:16:11.007+0000] {base.py:84} INFO - Using connection ID 'postgres_staging_db' for task execution.
+[2025-11-15T13:16:11.021+0000] {sql.py:487} INFO - Running statement: 
+        INSERT INTO dwh.fact_sales (
+            date_key,
+            customer_key,
+            product_key,
+            campaign_key,
+            transaction_id_natural,
+            quantity,
+            price_at_sale,
+            total_amount
+        )
+        SELECT
+            TO_CHAR(t.transaction_date, 'YYYYMMDD')::INT AS date_key,
+            COALESCE(dc.customer_key, 0) AS customer_key,
+            COALESCE(dp.product_key, 0) AS product_key,
+            0 AS campaign_key, 
+            t.transaction_id AS transaction_id_natural,
+            ti.quantity,
+            ti.price AS price_at_sale,
+            (ti.quantity * ti.price) AS total_amount
+
+        FROM staging.stg_transactions t
+        
+        JOIN staging.stg_transaction_items ti
+            ON t.transaction_id = ti.transaction_id
+            
+        LEFT JOIN dwh.dim_customer dc
+            ON t.customer_id = dc.customer_id_natural AND dc.is_current = TRUE
+            
+        LEFT JOIN dwh.dim_product dp
+            ON ti.product_id = dp.product_id_natural
+            
+        WHERE t.transaction_date >= '2020-01-01'
+          AND t.transaction_date <= '2030-12-31';
+    , parameters: None
+[2025-11-15T13:16:11.730+0000] {sql.py:496} INFO - Rows affected: 5214
+[2025-11-15T13:16:11.746+0000] {transform_to_dwh.py:161} INFO - Successfully loaded fact_sales.
+[2025-11-15T13:16:11.760+0000] {python.py:237} INFO - Done. Returned value was: None
+[2025-11-15T13:16:11.763+0000] {taskinstance.py:441} INFO - ::group::Post task execution logs
+[2025-11-15T13:16:11.794+0000] {taskinstance.py:1206} INFO - Marking task as SUCCESS. dag_id=task_2_transform_to_dwh, task_id=load_fact_sales, run_id=manual__2025-11-15T13:15:58.665502+00:00, execution_date=20251115T131558, start_date=20251115T131610, end_date=20251115T131611
+[2025-11-15T13:16:11.883+0000] {local_task_job_runner.py:240} INFO - Task exited with return code 0
+[2025-11-15T13:16:30.427+0000] {taskinstance.py:3503} INFO - 0 downstream tasks scheduled from follow-on schedule check
+[2025-11-15T13:16:30.432+0000] {local_task_job_runner.py:222} INFO - ::endgroup::
