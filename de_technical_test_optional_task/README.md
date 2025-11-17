@@ -3,7 +3,17 @@
 This pipeline simulates real-time IoT sensor data using Kafka and PySpark, aggregating a count of readings per minute.
 
 **Technology Stack:** Docker, Kafka, Zookeeper, PySpark (local), Python.
+---
+## 🏛️ Streaming Architecture
 
+This pipeline uses a "hybrid" model (Broker in Docker, Processor in Local Venv) to demonstrate a professional, open-source stack (Kafka + PySpark) on memory-constrained hardware (8GB RAM).
+
+![Streaming Pipeline Architecture](../assets/Task%204%20Optional%20Fix.jpg)
+
+* **Source:** A Python script (`producer.py`) runs an infinite loop, generating live IoT sensor data as JSON.
+* **Broker:** **Apache Kafka** (running in Docker) ingests this high-velocity stream into a topic.
+* **Process:** A **PySpark** script (`consumer.py`, running locally) subscribes to the Kafka topic. It applies the required **"Aggregate transaction count per minute"** logic using a 1-minute tumbling window.
+* **Sink:** The aggregated count is printed to the **console**, fulfilling the task requirement.
 ---
 
 ### 1. 🖥️ Environment Prerequisites (Mandatory)
@@ -75,3 +85,4 @@ Expected Output:
 ```Bash
 docker-compose -f docker-compose.streaming.yaml down
 ```
+
